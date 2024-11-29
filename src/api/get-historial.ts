@@ -15,7 +15,7 @@ const getCharacter = new GetCharacter(characterRepository);
 const saveCharacter = new SaveCharacter(characterRepository);
 const swapiService = new SWAPIService();
 
-// GET: /fusionados?s=Darth Vader
+// GET: /historial
 
 const lambdaHandler = async (
   event: APIGatewayProxyEvent
@@ -25,48 +25,20 @@ const lambdaHandler = async (
     resource_path: event.requestContext.resourcePath
   });
 
-  const name = event.queryStringParameters?.name;
-  if (name === undefined) {
-    logger.warn('Falta el parámetro \'name\' en la URL para realizar la búsqueda de un personaje', {
-      details: { queryStringParameters: event.queryStringParameters }
-    });
-
-    return {
-      statusCode: 400,
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ message: "Falta el parámetro 'name' en la URL" }),
-    };
-  }
   try {
-    metrics.addMetric('charactersRetrieved', 'Count', 1);
-    metrics.addMetadata('characterName', name);
+    metrics.addMetric('historialRetrieved', 'Count', 1);
 
-    let result = await getCharacter.execute(name);
+    const limit = event.queryStringParameters?.limit
+      ? parseInt(event.queryStringParameters.limit)
+      : 10;
 
-    if (!result) {
-      logger.info("El personaje no existe, se busca ahora en el servicio SWAPI", { details: { name } });
-      const character = await swapiService.getFirstCharacterBySearch(name);
-      console.log(character);
-      if (character) {
-        await saveCharacter.execute(character);
-        result = character;
-      }
-    }
+    const lastEvaluatedKey = event.queryStringParameters?.lastEvaluatedKey || null;
 
-    if (!result) {
-      logger.warn("No existe el personaje con el NAME " + name + " en la base de datos ni en el servicio SWAPI");
+    const result = await characterRepository.getAllPaginated(limit, lastEvaluatedKey);
 
-      return {
-        statusCode: 404,
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ message: "Personaje no encontrado" }),
-      };
-    }
-
-    logger.info('Personaje buscado con NAME: ' + name, { details: { character: result } });
-    metrics.addMetric('characterRetrieved', MetricUnit.Count, 1);
-    metrics.addMetadata('characterId', result.id);
-    metrics.addMetadata('characterName', result.name);
+    logger.info("Se encontro datos, se devuelven paginados");
+    metrics.addMetric('historialRetrieved', MetricUnit.Count, 1);
+    metrics.addMetadata('limit', limit.toString());
 
     return {
       statusCode: 200,
@@ -74,8 +46,7 @@ const lambdaHandler = async (
       body: JSON.stringify(result),
     };
   } catch (error) {
-    console.warn(error);
-    logger.error("Se ha producido un error al intentar recuperar datos de un personaje", error);
+    console.error("Error al obtener el historial:", error);
 
     return {
       statusCode: 500,

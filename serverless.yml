@@ -18,10 +18,14 @@ provider:
       statements:
         - Effect: Allow
           Action:
-            - dynamodb:PutItem
-            - dynamodb:GetItem
-            - dynamodb:Scan
+            - dynamodb:DescribeTable
             - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:BatchWriteItem
           Resource:
             - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CHARACTER_TABLE}
 
@@ -40,6 +44,12 @@ functions:
       - httpApi:
           path: /fusionados
           method: get
+  historial:
+    handler: src/api/get-historial.handler
+    events:
+      - httpApi:
+          path: /historial
+          method: get          
 
 resources:
   Resources:
@@ -60,16 +70,12 @@ resources:
           - AttributeName: name
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+        # ProvisionedThroughput:
+        #   ReadCapacityUnits: 1
+        #   WriteCapacityUnits: 1
         TimeToLiveSpecification:
-          - AttributeName: ttl
-            Enabled: true
-        # GlobalSecondaryIndexes:
-        #   - IndexName: NameIndex
-        #     KeySchema:
-        #       - AttributeName: name
-        #         KeyType: HASH
-        #     Projection:
-        #       ProjectionType: ALL
+          AttributeName: ttl
+          Enabled: true
 
 plugins:
   - serverless-offline
