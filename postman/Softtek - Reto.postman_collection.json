@@ -1,0 +1,303 @@
+{
+	"info": {
+		"_postman_id": "7a765f53-6c79-4875-8f46-8db094b9af48",
+		"name": "Softtek - Reto",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27988141"
+	},
+	"item": [
+		{
+			"name": "Local",
+			"item": [
+				{
+					"name": "Local - Fusionados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/fusionados",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"fusionados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Local - Fusionados - Yoda",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/fusionados?name=Yoda",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"fusionados"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Yoda"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Local - Fusionados - Darth Vader",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/fusionados?name=Darth Vader",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"fusionados"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Darth Vader"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Local - Almacenar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\": \"Un texto cualquiera aqui\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/almacenar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"almacenar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LOCAL - Historial - limit=2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/historial?limit=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"historial"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LOCAL - Historial - next page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/historial?limit=2&lastEvaluatedKey=R2-D2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"historial"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "lastEvaluatedKey",
+									"value": "R2-D2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AWS",
+			"item": [
+				{
+					"name": "AWS - Fusionados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/fusionados",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"fusionados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AWS - Fusionados - Darth Vader",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/fusionados?name=Darth Vader",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"fusionados"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Darth Vader"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AWS - Fusionados - Yoda",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/fusionados?name=Yoda",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"fusionados"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Yoda"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AWS - Almacenar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\": \"Un texto cualquiera aqui\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/almacenar",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"almacenar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AWS - Historial",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/historial",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"historial"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SWAPI - people",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://swapi.dev/api/people?search=Darth Vader",
+					"protocol": "https",
+					"host": [
+						"swapi",
+						"dev"
+					],
+					"path": [
+						"api",
+						"people"
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "Darth Vader"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
