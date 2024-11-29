@@ -8,4 +8,18 @@ export class GetCharacter {
   async execute(name: string): Promise<Character | null> {
     return await this.characterRepository.findByName(name);
   }
+
+  async getPaginateData(
+    limit: number,
+    lastEvaluatedKey?: string | null
+  ): Promise<{
+    count: number;
+    next: string | null;
+    results: Character[];
+  }> {
+    return await this.characterRepository.getAllPaginated(
+      limit,
+      lastEvaluatedKey
+    );
+  }
 }

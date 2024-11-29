@@ -6,16 +6,13 @@ import { injectLambdaContext } from "@aws-lambda-powertools/logger/middleware";
 import { MetricUnit } from '@aws-lambda-powertools/metrics';
 import { logMetrics } from "@aws-lambda-powertools/metrics/middleware";
 import { GetCharacter } from "../domain/use-cases/GetCharacter";
-import { SWAPIService } from "../adapters/outgoing/SWAPIService";
 import { DynamoDBCharacterRepository } from "../adapters/outgoing/DynamoDBCharacterRepository";
-import { SaveCharacter } from "../domain/use-cases/SaveCharacter";
 
 const characterRepository = new DynamoDBCharacterRepository();
 const getCharacter = new GetCharacter(characterRepository);
-const saveCharacter = new SaveCharacter(characterRepository);
-const swapiService = new SWAPIService();
 
 // GET: /historial
+// GET: /historial?limit=1&lastEvaluatedKey=R2-D2
 
 const lambdaHandler = async (
   event: APIGatewayProxyEvent
@@ -34,11 +31,13 @@ const lambdaHandler = async (
 
     const lastEvaluatedKey = event.queryStringParameters?.lastEvaluatedKey || null;
 
-    const result = await characterRepository.getAllPaginated(limit, lastEvaluatedKey);
+    const result = await getCharacter.getPaginateData(limit, lastEvaluatedKey);
 
     logger.info("Se encontro datos, se devuelven paginados");
     metrics.addMetric('historialRetrieved', MetricUnit.Count, 1);
+    metrics.addMetadata('count', result.count.toString());
     metrics.addMetadata('limit', limit.toString());
+    // metrics.addMetadata('lastEvaluatedKey',lastEvaluatedKey?.toString );
 
     return {
       statusCode: 200,
