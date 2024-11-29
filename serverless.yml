@@ -12,6 +12,7 @@ provider:
   stage: dev
   environment:
     CHARACTER_TABLE: Characters
+    TABLE_TTL: 30
   iam:
     role:
       statements:
@@ -57,8 +58,11 @@ resources:
             AttributeType: S
         KeySchema:
           - AttributeName: name
-            KeyType: HASH        
+            KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          - AttributeName: ttl
+            Enabled: true
         # GlobalSecondaryIndexes:
         #   - IndexName: NameIndex
         #     KeySchema:
