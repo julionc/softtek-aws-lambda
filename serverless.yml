@@ -1,0 +1,71 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: julionc
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: softtek-aws-lambda
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: softtek-aws-lambda
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs20.x
+  stage: dev
+  environment:
+    CHARACTER_TABLE: Characters
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:Scan
+            - dynamodb:Query
+          Resource:
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CHARACTER_TABLE}
+
+        - Effect: Allow
+          Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+          Resource:
+            - arn:aws:logs:${self:provider.region}:*:*
+
+functions:
+  character:
+    handler: src/api/get-character.handler
+    events:
+      - httpApi:
+          path: /fusionados
+          method: get
+
+resources:
+  Resources:
+    Characters:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Characters
+        # AttributeDefinitions:
+        #   - AttributeName: id
+        #     AttributeType: S
+        # KeySchema:
+        #   - AttributeName: id
+        #     KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: name
+            AttributeType: S
+        KeySchema:
+          - AttributeName: name
+            KeyType: HASH        
+        BillingMode: PAY_PER_REQUEST
+        # GlobalSecondaryIndexes:
+        #   - IndexName: NameIndex
+        #     KeySchema:
+        #       - AttributeName: name
+        #         KeyType: HASH
+        #     Projection:
+        #       ProjectionType: ALL
+
+plugins:
+  - serverless-offline
