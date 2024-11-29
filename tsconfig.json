@@ -2,7 +2,8 @@
     "compilerOptions": {
       "incremental": true,
       "target": "es2020",
-      "module": "ES2020",
+      // "module": "ESNext",   // Usa ES Modules
+      "module": "CommonJS",    // Middy de ESNext a CommonJS
       "declaration": true,
       "sourceMap": true,
       "composite": true,
@@ -13,6 +14,10 @@
       "forceConsistentCasingInFileNames": true,
       "preserveConstEnums": true,
       "resolveJsonModule": true,
-      "allowJs": true
-    }
+      "allowJs": true,
+      "allowSyntheticDefaultImports": true // Permite importar CommonJS con default
+    },
+    "include": [
+      "src/**/*.ts"
+    ]
   }

@@ -12,7 +12,8 @@ provider:
   stage: dev
   environment:
     CHARACTER_TABLE: Characters
-    TABLE_TTL: 30
+    INFORMATION_TABLE: Information
+    TABLE_TTL: 30 #cache
   iam:
     role:
       statements:
@@ -28,6 +29,7 @@ provider:
             - dynamodb:BatchWriteItem
           Resource:
             - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CHARACTER_TABLE}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.INFORMATION_TABLE}
 
         - Effect: Allow
           Action:
@@ -44,6 +46,12 @@ functions:
       - httpApi:
           path: /fusionados
           method: get
+  almacenar:
+    handler: src/api/post-information.handler
+    events:
+      - httpApi:
+          path: /almacenar
+          method: post          
   historial:
     handler: src/api/get-historial.handler
     events:
@@ -76,6 +84,32 @@ resources:
         TimeToLiveSpecification:
           AttributeName: ttl
           Enabled: true
+    Information:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Information
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        # ProvisionedThroughput:
+        #   ReadCapacityUnits: 1
+        #   WriteCapacityUnits: 1
+
+custom:
+  esbuild:
+    format: esm
+    outputFileExtension: .mjs
+    exclude:
+      - "@aws-sdk/*"
+
+build:
+  esbuild:
+    bundle: true
+    minify: true
 
 plugins:
   - serverless-offline

@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "devDependencies": {
     "@middy/core": "^4.1.0",
     "@types/aws-lambda": "^8.10.146",
